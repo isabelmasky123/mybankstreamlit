@@ -13,6 +13,9 @@ except FileNotFoundError:
 except Exception as e:
     st.error(f"An error occurred: {e}")
 
+if 'data' not in locals():
+    st.stop()
+
 # App Title and Description
 st.title("Interactive Data Pattern Exploration App")
 st.title("Problem Statement & Objective:")
@@ -33,10 +36,11 @@ gender = st.sidebar.multiselect("Gender", options=["female", "male"], default=["
 homeowner = st.sidebar.multiselect("Homeownership", options=["yes", "no"], default=["yes", "no"])
 
 # Filter data based on gender
-if "female" in gender:
-    filtered_data = data[data['demog_genf'] == 'yes']
-if "male" in gender:
-    filtered_data = data[data['demog_genm'] == 'yes']
+filtered_data = data[
+    ((data['demog_genf'] == 'yes') & ("female" in gender)) |
+    ((data['demog_genm'] == 'yes') & ("male" in gender))
+]
+
 
 # Apply other filters (numerical and categorical)
 filtered_data = filtered_data[
